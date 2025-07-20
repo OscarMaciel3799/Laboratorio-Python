@@ -1,4 +1,4 @@
-<h1>🌱 Trabajo Final – App en Python con enfoque en Green Software</h1>
+<h2>🌱 Trabajo Final – App en Python con enfoque en Green Software</h2>
 
 Materia: Algoritmos y Estructuras de Datos<br>
 Carrera: Ingeniería en Sistemas de Información – 1er año<br>
