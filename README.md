@@ -107,8 +107,6 @@ Crear una aplicación de consola que permita a los usuarios:
 
 - [Nombre Completo 1]
 - [Nombre Completo 2]
-- [Nombre Completo 3]
-- [Nombre Completo 4] _(opcional)_
 
 ## 📁 Contenido del Repositorio
 
