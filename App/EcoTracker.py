@@ -45,19 +45,29 @@ def obtener_ruta_dispositivos():
 def mostrar_dispositivos():
     """Muestra la lista de dispositivos disponibles"""
     print("\n📱 Dispositivos disponibles:")
-    print("-"*60)
+    print("-"*71)
     
     ruta = obtener_ruta_dispositivos()
     with open(ruta, 'r', encoding='utf-8') as f:
         dispositivos = json.load(f)
     
-    print(f"{'Nombre':20} | {'Consumo Watts (W)':<15}  | {'Categoria':<15}")
-    print("-" * 60)  # Línea separadora
+    print(f"{'Código':12} | {'Nombre':18} | {'Consumo Watts (W)':<15} | {'Categoria':<15}")
+    print("-" * 71)  # Línea separadora
     for codigo, info in dispositivos.items():
-        print(f"{info['nombre']:20} | {info['consumo_watts']:<18} | {info['categoria']}")
+        print(f"{codigo:12} | {info['nombre']:18} | {info['consumo_watts']:<15}   | {info['categoria']}")
     
-    print("-"*60)
-
+    print("-"*71)
+def registrar_actividad(dispositivo: str, tiempo_minutos: int):
+    """
+    Calculamos el consumo
+    Obtenemos la fecha actual
+    Definimos el formato de la actividad
+    Guardamos la actividad en el archivo de actividad
+    
+    Mostramos mensajes    
+    """
+    print("Funcion registrar actividad")
+                  
 def main():
     """Función principal del programa"""
     print("🌱 Iniciando EcoTracker...")
@@ -72,7 +82,22 @@ def main():
         
         match opcion:
             case 1: 
-                print(1)
+                mostrar_dispositivos()
+                codigo = input("\nIngrese nombre del dispositivo: ").strip().lower()
+                ruta = obtener_ruta_dispositivos()
+                # Leer el archivo y cargar el contenido JSON
+                with open(ruta, 'r', encoding='utf-8') as f:
+                    dispositivos = json.load(f)
+                    
+                # Buscar el dispositivo por código
+                if codigo in dispositivos:
+                    tiempo = int(input("Ingrese tiempo de uso (minutos): "))
+                    if tiempo > 0:
+                        registrar_actividad(codigo, tiempo)
+                    else:
+                        print("❌ El tiempo debe ser positivo")
+                else:
+                    print("❌ Dispositivo no encontrado")
             case 2: 
                 mostrar_dispositivos()
             case 3: 
