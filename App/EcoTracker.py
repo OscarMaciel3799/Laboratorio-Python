@@ -9,10 +9,15 @@ Fecha: Julio 2025
 """
 
 # Constantes globales
+import json
+from pathlib import Path
+
+
 ARCHIVO_ACTIVIDADES = "actividades.txt"
 ARCHIVO_METAS = "metas.txt"
 ARCHIVO_DISPOSITIVOS = "dispositivos.txt"
 FACTOR_CO2_KWH = 0.4  # kg CO2 por kWh (promedio mundial)
+
 def mostrar_menu():
     """Muestra el menú principal"""
     print("\n" + "="*50)
@@ -28,10 +33,37 @@ def mostrar_menu():
     print("8. Salir")
     print("-"*50)
 
+def inicializar_app():
+    print("hola")
+
+def obtener_ruta_dispositivos():
+    # Obtiene la ruta del directorio donde está este script
+    directorio_actual = Path(__file__).parent
+    # Construye la ruta completa al archivo dispositivos.txt
+    return directorio_actual / "dispositivos.txt"
+        
+def mostrar_dispositivos():
+    """Muestra la lista de dispositivos disponibles"""
+    print("\n📱 Dispositivos disponibles:")
+    print("-"*60)
+    
+    ruta = obtener_ruta_dispositivos()
+    with open(ruta, 'r', encoding='utf-8') as f:
+        dispositivos = json.load(f)
+    
+    print(f"{'Nombre':20} | {'Consumo Watts (W)':<15}  | {'Categoria':<15}")
+    print("-" * 60)  # Línea separadora
+    for codigo, info in dispositivos.items():
+        print(f"{info['nombre']:20} | {info['consumo_watts']:<18} | {info['categoria']}")
+    
+    print("-"*60)
+
 def main():
     """Función principal del programa"""
     print("🌱 Iniciando EcoTracker...")
     print("💚 Promoviendo el Green Software desde 2025")
+    
+    inicializar_app()
     # AGREGAR UNA WHILE
     while True:
         mostrar_menu()
@@ -42,7 +74,7 @@ def main():
             case 1: 
                 print(1)
             case 2: 
-                print(2)
+                mostrar_dispositivos()
             case 3: 
                 print(3)
             case 4: 
@@ -53,8 +85,12 @@ def main():
                 print(6)
             case 7: 
                 print(7)
-            case 8: 
+            case 8:
+                print("\n\n🌱 Saliendo de EcoTracker...") 
                 break
-                
+            case _:
+                print("❌ Opción inválida. Seleccione 1-8")
+        input("\nPresione Enter para continuar...")
+
 if __name__ == "__main__":
     main()
