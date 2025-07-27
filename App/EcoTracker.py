@@ -12,7 +12,7 @@ Fecha: Julio 2025
 import datetime
 import json
 from pathlib import Path
-from typing import Dict, Tuple
+from typing import Dict, Tuple, List
 
 
 RUTA_ACTIVIDADES = "../docs/actividades.txt"
@@ -92,6 +92,8 @@ def registrar_actividad(dispositivo: str, tiempo_minutos: int):
     fecha_actual = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("Funcion registrar actividad")
 
+
+#_-------------------------------------------------------------
 def cargar_dispositivos() -> Dict[str, Dict]:
     """Carga la base de datos de dispositivos desde archivo existente"""
     try:
@@ -111,6 +113,36 @@ def cargar_dispositivos() -> Dict[str, Dict]:
     except Exception as e:
         print(f"❌ Error al cargar dispositivos: {e}")
         return {}
+
+def cargar_actividades() -> List[Dict]:
+    """Carga el historial de actividades desde archivo existente"""
+    actividades = []
+    
+    try:
+        with open(RUTA_ACTIVIDADES, 'r', encoding='utf-8') as f:
+            for linea in f:
+                linea = linea.strip()
+                if linea and not linea.startswith('#'):
+                    try:
+                        # Formato: fecha|dispositivo|tiempo_minutos|consumo_kwh|co2_kg
+                        partes = linea.split('|')
+                        if len(partes) >= 5:
+                            actividad = {
+                                'fecha': partes[0],
+                                'dispositivo': partes[1],
+                                'tiempo_minutos': int(partes[2]),
+                                'consumo_kwh': float(partes[3]),
+                                'co2_kg': float(partes[4])
+                            }
+                            actividades.append(actividad)
+                    except (ValueError, IndexError):
+                        continue
+    except FileNotFoundError:
+        print(f"❌ Archivo {RUTA_ACTIVIDADES} no encontrado")
+    except Exception as e:
+        print(f"❌ Error al cargar actividades: {e}")
+    
+    return actividades
                       
 def main():
     """Función principal del programa"""
