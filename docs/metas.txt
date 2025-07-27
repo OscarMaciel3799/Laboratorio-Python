@@ -1,0 +1,7 @@
+{
+  "meta_diaria_kwh": 1.0,
+  "meta_semanal_kwh": 7.0,
+  "meta_mensual_kwh": 30.0,
+  "meta_co2_diaria": 0.4,
+  "fecha_creacion": "2025-07-21"
+}

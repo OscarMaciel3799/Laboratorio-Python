@@ -1,0 +1,37 @@
+{
+  "laptop": {
+    "nombre": "Laptop",
+    "consumo_watts": 60,
+    "categoria": "computadora"
+  },
+  "desktop": {
+    "nombre": "PC de Escritorio",
+    "consumo_watts": 150,
+    "categoria": "computadora"
+  },
+  "smartphone": {
+    "nombre": "Smartphone",
+    "consumo_watts": 8,
+    "categoria": "móvil"
+  },
+  "tablet": {
+    "nombre": "Tablet",
+    "consumo_watts": 12,
+    "categoria": "móvil"
+  },
+  "monitor": {
+    "nombre": "Monitor",
+    "consumo_watts": 40,
+    "categoria": "periférico"
+  },
+  "router": {
+    "nombre": "Router Wi-Fi",
+    "consumo_watts": 10,
+    "categoria": "red"
+  },
+  "smart_tv": {
+    "nombre": "Smart TV",
+    "consumo_watts": 120,
+    "categoria": "entretenimiento"
+  }
+}
