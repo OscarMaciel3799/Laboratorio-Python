@@ -15,9 +15,9 @@ from pathlib import Path
 from typing import Dict, Tuple
 
 
-RUTA_ACTIVIDADES = "actividades.txt"
-RUTA_METAS = "metas.txt"
-RUTA_DISPOSITIVOS = "dispositivos.txt"
+RUTA_ACTIVIDADES = "../docs/actividades.txt"
+RUTA_METAS = "../docs/metas.txt"
+RUTA_DISPOSITIVOS = "../docs/dispositivos.txt"
 FACTOR_CO2_KWH = 0.4  # kg CO2 por kWh (promedio mundial)
 
 def mostrar_menu():
