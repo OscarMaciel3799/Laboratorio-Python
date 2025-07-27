@@ -143,6 +143,26 @@ def cargar_actividades() -> List[Dict]:
         print(f"❌ Error al cargar actividades: {e}")
     
     return actividades
+
+def cargar_metas() -> Dict:
+    """Carga las metas de reducción de consumo desde archivo existente"""
+    try:
+        with open(RUTA_METAS, 'r', encoding='utf-8') as f:
+            content = f.read()
+            if content.strip():
+                return json.loads(content)
+            else:
+                print(f"❌ El archivo {RUTA_METAS} está vacío")
+                return {}
+    except FileNotFoundError:
+        print(f"❌ Archivo {RUTA_METAS} no encontrado")
+        return {}
+    except json.JSONDecodeError as e:
+        print(f"❌ Error al leer JSON en {RUTA_METAS}: {e}")
+        return {}
+    except Exception as e:
+        print(f"❌ Error al cargar metas: {e}")
+        return {}
                       
 def main():
     """Función principal del programa"""
