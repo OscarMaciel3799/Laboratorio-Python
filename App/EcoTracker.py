@@ -9,13 +9,15 @@ Fecha: Julio 2025
 """
 
 # Constantes globales
+import datetime
 import json
 from pathlib import Path
+from typing import Dict, Tuple
 
 
-ARCHIVO_ACTIVIDADES = "actividades.txt"
-ARCHIVO_METAS = "metas.txt"
-ARCHIVO_DISPOSITIVOS = "dispositivos.txt"
+RUTA_ACTIVIDADES = "actividades.txt"
+RUTA_METAS = "metas.txt"
+RUTA_DISPOSITIVOS = "dispositivos.txt"
 FACTOR_CO2_KWH = 0.4  # kg CO2 por kWh (promedio mundial)
 
 def mostrar_menu():
@@ -57,6 +59,25 @@ def mostrar_dispositivos():
         print(f"{codigo:12} | {info['nombre']:18} | {info['consumo_watts']:<15}   | {info['categoria']}")
     
     print("-"*71)
+
+def calcular_consumo(codigo: str, tiempo_minutos: int) -> Tuple[float, float]:
+    """Calcula el consumo energético y emisiones CO2"""
+    ruta = obtener_ruta_dispositivos()
+    with open(ruta, 'r', encoding='utf-8') as f:
+        dispositivos = json.load(f)
+    if codigo not in dispositivos:
+        raise ValueError(f"Dispositivo '{codigo}' no encontrado")
+    
+    consumo_watts = dispositivos[codigo]["consumo_watts"]
+    
+    # Convertir a kWh
+    consumo_kwh = (consumo_watts * tiempo_minutos) / (1000 * 60)
+    
+    # Calcular CO2 equivalente
+    co2_kg = consumo_kwh * FACTOR_CO2_KWH
+    
+    return consumo_kwh, co2_kg
+
 def registrar_actividad(dispositivo: str, tiempo_minutos: int):
     """
     Calculamos el consumo
@@ -66,12 +87,40 @@ def registrar_actividad(dispositivo: str, tiempo_minutos: int):
     
     Mostramos mensajes    
     """
+    consumo_kwh, co2_kg = calcular_consumo(dispositivo, tiempo_minutos)
+        
+    fecha_actual = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("Funcion registrar actividad")
-                  
+
+def cargar_dispositivos() -> Dict[str, Dict]:
+    """Carga la base de datos de dispositivos desde archivo existente"""
+    try:
+        with open(RUTA_DISPOSITIVOS, 'r', encoding='utf-8') as f:
+            content = f.read()
+            if content.strip():
+                return json.loads(content)
+            else:
+                print(f"❌ El archivo {RUTA_DISPOSITIVOS} está vacío")
+                return {}
+    except FileNotFoundError:
+        print(f"❌ Archivo {RUTA_DISPOSITIVOS} no encontrado")
+        return {}
+    except json.JSONDecodeError as e:
+        print(f"❌ Error al leer JSON en {RUTA_DISPOSITIVOS}: {e}")
+        return {}
+    except Exception as e:
+        print(f"❌ Error al cargar dispositivos: {e}")
+        return {}
+                      
 def main():
     """Función principal del programa"""
     print("🌱 Iniciando EcoTracker...")
     print("💚 Promoviendo el Green Software desde 2025")
+    
+    # Cargar datos iniciales
+    dispositivos = cargar_dispositivos()
+    actividades = cargar_actividades()
+    metas = cargar_metas()
     
     inicializar_app()
     # AGREGAR UNA WHILE
@@ -83,7 +132,7 @@ def main():
         match opcion:
             case 1: 
                 mostrar_dispositivos()
-                codigo = input("\nIngrese nombre del dispositivo: ").strip().lower()
+                codigo = input("\nIngrese codigo del dispositivo: ").strip().lower()
                 ruta = obtener_ruta_dispositivos()
                 # Leer el archivo y cargar el contenido JSON
                 with open(ruta, 'r', encoding='utf-8') as f:
@@ -91,11 +140,14 @@ def main():
                     
                 # Buscar el dispositivo por código
                 if codigo in dispositivos:
-                    tiempo = int(input("Ingrese tiempo de uso (minutos): "))
-                    if tiempo > 0:
-                        registrar_actividad(codigo, tiempo)
-                    else:
-                        print("❌ El tiempo debe ser positivo")
+                    try:
+                        tiempo = int(input("Ingrese tiempo de uso (minutos): "))
+                        if tiempo > 0:
+                            registrar_actividad(codigo, tiempo)
+                        else:
+                            print("❌ El tiempo debe ser positivo")
+                    except ValueError:
+                        print("❌ Tiempo inválido")
                 else:
                     print("❌ Dispositivo no encontrado")
             case 2: 
