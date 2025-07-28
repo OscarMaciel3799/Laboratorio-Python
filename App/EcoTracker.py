@@ -360,7 +360,6 @@ def mostrar_recomendaciones_interfaz(dispositivos: Dict, actividades: List[Dict]
     for i, recomendacion in enumerate(recomendaciones, 1):
         print(f"{i}. {recomendacion}")
 
-
 def obtener_recomendaciones(dispositivos: Dict, reporte_diario: Dict) -> List[str]:
     """Genera recomendaciones basadas en el uso actual"""
     recomendaciones = []
