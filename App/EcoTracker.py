@@ -79,8 +79,8 @@ def registrar_actividad(dispositivos: Dict, actividades: List[Dict], dispositivo
     try:
         consumo_kwh, co2_kg = calcular_consumo(dispositivos, dispositivo, tiempo_minutos)
         
-        fecha_actual = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
+        fecha_actual = datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+        print(fecha_actual)
         # Guardar en memoria
         actividad = {
             'fecha': fecha_actual,
@@ -178,7 +178,37 @@ def cargar_metas() -> Dict:
     except Exception as e:
         print(f"❌ Error al cargar metas: {e}")
         return {}
-                      
+                  
+def mostrar_reporte_diario_interfaz(actividades: List[Dict], metas: Dict, dispositivos: Dict):
+    """Muestra el reporte diario de consumo - Interfaz"""
+    print("\n📊 Reporte Diario de Consumo")
+    print("-"*40)
+    
+    fecha_input = input("Ingrese fecha (DD-MM-YYYY) o Enter para hoy: ").strip()
+    fecha = fecha_input if fecha_input else None
+    
+    reporte = generar_reporte_diario(actividades, metas, fecha)
+    
+    print(f"\n📅 Fecha: {reporte['fecha']}")
+    print(f"⏱️  Actividades registradas: {reporte['actividades']}")
+    print(f"🕐 Tiempo total: {reporte['tiempo_total']} minutos")
+    print(f"⚡ Consumo total: {reporte['consumo_total']:.3f} kWh")
+    print(f"🌍 CO2 equivalente: {reporte['co2_total']:.3f} kg")
+    print(f"🎯 Meta diaria: {reporte['meta_diaria']:.3f} kWh")
+    
+    if reporte['cumple_meta']:
+        print("✅ ¡Meta diaria cumplida!")
+    else:
+        print("❌ Meta diaria no cumplida")
+    
+    if reporte['consumo_dispositivo']:
+        print("\n📱 Consumo por dispositivo:")
+        for dispositivo, datos in reporte['consumo_dispositivo'].items():
+            nombre = dispositivos.get(dispositivo, {}).get('nombre', dispositivo)
+            print(f"   {nombre}: {datos['consumo']:.3f} kWh ({datos['tiempo']} min)")
+
+    
+
 def main():
     """Función principal del programa"""
     print("🌱 Iniciando EcoTracker...")
@@ -219,7 +249,7 @@ def main():
             case 2: 
                 mostrar_dispositivos(dispositivos)
             case 3: 
-                print(3)
+                mostrar_reporte_diario_interfaz(actividades, metas, dispositivos)
             case 4: 
                 print(4)
             case 5: 
