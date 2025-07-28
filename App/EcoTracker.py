@@ -269,7 +269,36 @@ def mostrar_reporte_semanal_interfaz(actividades: List[Dict], metas: Dict):
         print("❌ Meta semanal no cumplida")
     
 
+def generar_reporte_semanal(actividades: List[Dict], metas: Dict) -> Dict:
+    """Genera reporte de consumo semanal"""
+    fecha_actual = datetime.datetime.now()
+    fechas_semana = []
     
+    for i in range(7):
+        fecha = fecha_actual - datetime.timedelta(days=i)
+        fechas_semana.append(fecha.strftime("%d-%m-%Y"))
+    
+    reportes_diarios = []
+    consumo_total = 0
+    co2_total = 0
+    
+    for fecha in fechas_semana:
+        reporte = generar_reporte_diario(actividades, metas, fecha)
+        reportes_diarios.append(reporte)
+        consumo_total += reporte["consumo_total"]
+        co2_total += reporte["co2_total"]
+    
+    meta_semanal = metas.get("meta_semanal_kwh", 7.0)
+    
+    return {
+        "periodo": f"{fechas_semana[-1]} a {fechas_semana[0]}",
+        "reportes_diarios": reportes_diarios,
+        "consumo_total": consumo_total,
+        "co2_total": co2_total,
+        "meta_semanal": meta_semanal,
+        "cumple_meta": consumo_total <= meta_semanal
+    }
+        
 def main():
     """Función principal del programa"""
     print("🌱 Iniciando EcoTracker...")
