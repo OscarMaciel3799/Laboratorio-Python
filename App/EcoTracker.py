@@ -391,6 +391,43 @@ def obtener_recomendaciones(dispositivos: Dict, reporte_diario: Dict) -> List[st
     
     return recomendaciones
 
+def mostrar_estadisticas(actividades: List[Dict], dispositivos: Dict):
+    """Muestra estadísticas generales del uso"""
+    print("\n📈 Estadísticas Generales")
+    print("-"*40)
+    
+    if not actividades:
+        print("No hay actividades registradas")
+        return
+    
+    total_actividades = len(actividades)
+    consumo_total = sum(act['consumo_kwh'] for act in actividades)
+    co2_total = sum(act['co2_kg'] for act in actividades)
+    tiempo_total = sum(act['tiempo_minutos'] for act in actividades)
+    
+    print(f"📊 Total de actividades: {total_actividades}")
+    print(f"⏱️  Tiempo total registrado: {tiempo_total} minutos ({tiempo_total/60:.1f} horas)")
+    print(f"⚡ Consumo total: {consumo_total:.3f} kWh")
+    print(f"🌍 CO2 total generado: {co2_total:.3f} kg")
+    print(f"📉 Promedio diario: {consumo_total/max(1, total_actividades//5):.3f} kWh")
+    
+    # Dispositivo más usado
+    dispositivos_uso = {}
+    for act in actividades:
+        disp = act['dispositivo']
+        if disp not in dispositivos_uso:
+            dispositivos_uso[disp] = {'tiempo': 0, 'consumo': 0}
+        dispositivos_uso[disp]['tiempo'] += act['tiempo_minutos']
+        dispositivos_uso[disp]['consumo'] += act['consumo_kwh']
+    
+    if dispositivos_uso:
+        dispositivo_favorito = max(dispositivos_uso.items(), key=lambda x: x[1]['tiempo'])
+        nombre_favorito = dispositivos.get(dispositivo_favorito[0], {}).get('nombre', dispositivo_favorito[0])
+        print(f"📱 Dispositivo más usado: {nombre_favorito}")
+        print(f"   Tiempo total: {dispositivo_favorito[1]['tiempo']} minutos")
+        print(f"   Consumo: {dispositivo_favorito[1]['consumo']:.3f} kWh")
+
+
 def main():
     """Función principal del programa"""
     print("🌱 Iniciando EcoTracker...")
@@ -439,7 +476,7 @@ def main():
             case 6: 
                 mostrar_recomendaciones_interfaz(dispositivos, actividades, metas)
             case 7: 
-                print(7)
+                mostrar_estadisticas(actividades, dispositivos)
             case 8:
                 print("\n\n🌱 Saliendo de EcoTracker...") 
                 break
