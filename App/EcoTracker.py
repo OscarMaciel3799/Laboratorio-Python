@@ -268,7 +268,6 @@ def mostrar_reporte_semanal_interfaz(actividades: List[Dict], metas: Dict):
     else:
         print("❌ Meta semanal no cumplida")
     
-
 def generar_reporte_semanal(actividades: List[Dict], metas: Dict) -> Dict:
     """Genera reporte de consumo semanal"""
     fecha_actual = datetime.datetime.now()
@@ -298,7 +297,40 @@ def generar_reporte_semanal(actividades: List[Dict], metas: Dict) -> Dict:
         "meta_semanal": meta_semanal,
         "cumple_meta": consumo_total <= meta_semanal
     }
+
+
+def establecer_metas_interfaz(metas: Dict):
+    """Interfaz para establecer metas de consumo"""
+    print("\n🎯 Establecer Metas de Consumo")
+    print("-"*40)
+    
+    print("Metas actuales:")
+    print(f"   Diaria: {metas.get('meta_diaria_kwh', 1.0):.3f} kWh")
+    print(f"   Semanal: {metas.get('meta_semanal_kwh', 7.0):.3f} kWh")
+    print(f"   Mensual: {metas.get('meta_mensual_kwh', 30.0):.3f} kWh")
+    
+    print("\nSeleccione tipo de meta:")
+    print("1. Diaria")
+    print("2. Semanal")
+    print("3. Mensual")
+    
+    try:
+        opcion = int(input("Opción: "))
+        tipos = {1: "diaria", 2: "semanal", 3: "mensual"}
         
+        if opcion in tipos:
+            valor = float(input(f"Ingrese nueva meta {tipos[opcion]} (kWh): "))
+            if valor > 0:
+                establecer_meta(metas, tipos[opcion], valor)
+            else:
+                print("❌ El valor debe ser positivo")
+        else:
+            print("❌ Opción inválida")
+            
+    except ValueError:
+        print("❌ Valor inválido")
+
+  
 def main():
     """Función principal del programa"""
     print("🌱 Iniciando EcoTracker...")
@@ -343,7 +375,7 @@ def main():
             case 4: 
                 mostrar_reporte_semanal_interfaz(actividades, metas)
             case 5: 
-                print(5)
+                establecer_metas_interfaz(metas)
             case 6: 
                 print(6)
             case 7: 
