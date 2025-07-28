@@ -59,15 +59,12 @@ def mostrar_dispositivos(dispositivos: Dict):
     
     print("-"*71)
 
-def calcular_consumo(codigo: str, tiempo_minutos: int) -> Tuple[float, float]:
+def calcular_consumo(dispositivos: Dict, dispositivo: str, tiempo_minutos: int) -> Tuple[float, float]:
     """Calcula el consumo energético y emisiones CO2"""
-    ruta = obtener_ruta_dispositivos()
-    with open(ruta, 'r', encoding='utf-8') as f:
-        dispositivos = json.load(f)
-    if codigo not in dispositivos:
-        raise ValueError(f"Dispositivo '{codigo}' no encontrado")
+    if dispositivo not in dispositivos:
+        raise ValueError(f"Dispositivo '{dispositivo}' no encontrado")
     
-    consumo_watts = dispositivos[codigo]["consumo_watts"]
+    consumo_watts = dispositivos[dispositivo]["consumo_watts"]
     
     # Convertir a kWh
     consumo_kwh = (consumo_watts * tiempo_minutos) / (1000 * 60)
@@ -77,20 +74,39 @@ def calcular_consumo(codigo: str, tiempo_minutos: int) -> Tuple[float, float]:
     
     return consumo_kwh, co2_kg
 
-def registrar_actividad(dispositivo: str, tiempo_minutos: int):
-    """
-    Calculamos el consumo
-    Obtenemos la fecha actual
-    Definimos el formato de la actividad
-    Guardamos la actividad en el archivo de actividad
-    
-    Mostramos mensajes    
-    """
-    consumo_kwh, co2_kg = calcular_consumo(dispositivo, tiempo_minutos)
+def registrar_actividad(dispositivos: Dict, actividades: List[Dict], dispositivo: str, tiempo_minutos: int) -> bool:
+    """Registra una nueva actividad de uso"""
+    try:
+        consumo_kwh, co2_kg = calcular_consumo(dispositivos, dispositivo, tiempo_minutos)
         
-    fecha_actual = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print("Funcion registrar actividad")
-
+        fecha_actual = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        # Guardar en memoria
+        actividad = {
+            'fecha': fecha_actual,
+            'dispositivo': dispositivo,
+            'tiempo_minutos': tiempo_minutos,
+            'consumo_kwh': consumo_kwh,
+            'co2_kg': co2_kg
+        }
+        actividades.append(actividad)
+        
+        # Guardar en archivo
+        with open(RUTA_ACTIVIDADES, 'a', encoding='utf-8') as f:
+            linea = f"{fecha_actual}|{dispositivo}|{tiempo_minutos}|{consumo_kwh:.6f}|{co2_kg:.6f}\n"
+            f.write(linea)
+        
+        print(f"✅ Actividad registrada exitosamente!")
+        print(f"   Dispositivo: {dispositivos[dispositivo]['nombre']}")
+        print(f"   Tiempo: {tiempo_minutos} minutos")
+        print(f"   Consumo: {consumo_kwh:.3f} kWh")
+        print(f"   CO2 equivalente: {co2_kg:.3f} kg")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error al registrar actividad: {e}")
+        return False
 
 #_-------------------------------------------------------------
 def cargar_dispositivos() -> Dict[str, Dict]:
@@ -184,9 +200,8 @@ def main():
             case 1: 
                 mostrar_dispositivos(dispositivos)
                 codigo = input("\nIngrese codigo del dispositivo: ").strip().lower()
-                ruta = obtener_ruta_dispositivos()
                 # Leer el archivo y cargar el contenido JSON
-                with open(ruta, 'r', encoding='utf-8') as f:
+                with open(RUTA_DISPOSITIVOS, 'r', encoding='utf-8') as f:
                     dispositivos = json.load(f)
                     
                 # Buscar el dispositivo por código
@@ -194,7 +209,7 @@ def main():
                     try:
                         tiempo = int(input("Ingrese tiempo de uso (minutos): "))
                         if tiempo > 0:
-                            registrar_actividad(codigo, tiempo)
+                            registrar_actividad(dispositivos, actividades, codigo, tiempo)
                         else:
                             print("❌ El tiempo debe ser positivo")
                     except ValueError:
