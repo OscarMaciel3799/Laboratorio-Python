@@ -44,14 +44,13 @@ def obtener_ruta_dispositivos():
     # Construye la ruta completa al archivo dispositivos.txt
     return directorio_actual / "dispositivos.txt"
         
-def mostrar_dispositivos():
+def mostrar_dispositivos(dispositivos: Dict):
     """Muestra la lista de dispositivos disponibles"""
     print("\n📱 Dispositivos disponibles:")
     print("-"*71)
-    
-    ruta = obtener_ruta_dispositivos()
-    with open(ruta, 'r', encoding='utf-8') as f:
-        dispositivos = json.load(f)
+    if not dispositivos:
+        print("No hay dispositivos disponibles")
+        return
     
     print(f"{'Código':12} | {'Nombre':18} | {'Consumo Watts (W)':<15} | {'Categoria':<15}")
     print("-" * 71)  # Línea separadora
@@ -183,7 +182,7 @@ def main():
         
         match opcion:
             case 1: 
-                mostrar_dispositivos()
+                mostrar_dispositivos(dispositivos)
                 codigo = input("\nIngrese codigo del dispositivo: ").strip().lower()
                 ruta = obtener_ruta_dispositivos()
                 # Leer el archivo y cargar el contenido JSON
@@ -203,7 +202,7 @@ def main():
                 else:
                     print("❌ Dispositivo no encontrado")
             case 2: 
-                mostrar_dispositivos()
+                mostrar_dispositivos(dispositivos)
             case 3: 
                 print(3)
             case 4: 
