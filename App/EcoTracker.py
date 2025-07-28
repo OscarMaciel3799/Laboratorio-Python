@@ -330,7 +330,27 @@ def establecer_metas_interfaz(metas: Dict):
     except ValueError:
         print("❌ Valor inválido")
 
-  
+
+def establecer_meta(metas: Dict, tipo_meta: str, valor: float) -> bool:
+    """Establece una nueva meta de consumo"""
+    try:
+        if tipo_meta in ["diaria", "semanal", "mensual"]:
+            key = f"meta_{tipo_meta}_kwh"
+            metas[key] = valor
+            
+            # Guardar en archivo
+            with open(RUTA_METAS, 'w', encoding='utf-8') as f:
+                json.dump(metas, f, ensure_ascii=False, indent=2)
+            
+            print(f"✅ Meta {tipo_meta} establecida: {valor} kWh")
+            return True
+        else:
+            print("❌ Tipo de meta inválido. Use: diaria, semanal, mensual")
+            return False
+    except Exception as e:
+        print(f"❌ Error al establecer meta: {e}")
+        return False
+     
 def main():
     """Función principal del programa"""
     print("🌱 Iniciando EcoTracker...")
