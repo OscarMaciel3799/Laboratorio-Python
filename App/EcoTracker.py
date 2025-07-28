@@ -298,7 +298,6 @@ def generar_reporte_semanal(actividades: List[Dict], metas: Dict) -> Dict:
         "cumple_meta": consumo_total <= meta_semanal
     }
 
-
 def establecer_metas_interfaz(metas: Dict):
     """Interfaz para establecer metas de consumo"""
     print("\n🎯 Establecer Metas de Consumo")
@@ -330,7 +329,6 @@ def establecer_metas_interfaz(metas: Dict):
     except ValueError:
         print("❌ Valor inválido")
 
-
 def establecer_meta(metas: Dict, tipo_meta: str, valor: float) -> bool:
     """Establece una nueva meta de consumo"""
     try:
@@ -350,7 +348,50 @@ def establecer_meta(metas: Dict, tipo_meta: str, valor: float) -> bool:
     except Exception as e:
         print(f"❌ Error al establecer meta: {e}")
         return False
-     
+
+def mostrar_recomendaciones_interfaz(dispositivos: Dict, actividades: List[Dict], metas: Dict):
+    """Muestra recomendaciones basadas en el uso actual"""
+    print("\n💡 Recomendaciones de Eficiencia Energética")
+    print("-"*50)
+    
+    reporte_hoy = generar_reporte_diario(actividades, metas)
+    recomendaciones = obtener_recomendaciones(dispositivos, reporte_hoy)
+    
+    for i, recomendacion in enumerate(recomendaciones, 1):
+        print(f"{i}. {recomendacion}")
+
+
+def obtener_recomendaciones(dispositivos: Dict, reporte_diario: Dict) -> List[str]:
+    """Genera recomendaciones basadas en el uso actual"""
+    recomendaciones = []
+    
+    consumo_total = reporte_diario["consumo_total"]
+    meta_diaria = reporte_diario["meta_diaria"]
+    
+    if consumo_total > meta_diaria:
+        exceso = ((consumo_total - meta_diaria) / meta_diaria) * 100
+        recomendaciones.append(f"⚠️  Excedes tu meta diaria en {exceso:.1f}%")
+    
+    if reporte_diario["consumo_dispositivo"]:
+        dispositivo_mayor = max(
+            reporte_diario["consumo_dispositivo"].items(),
+            key=lambda x: x[1]["consumo"]
+        )
+        
+        nombre_disp = dispositivos[dispositivo_mayor[0]]["nombre"]
+        recomendaciones.append(f"📊 {nombre_disp} es tu dispositivo con mayor consumo")
+    
+    # Recomendaciones generales
+    recomendaciones.extend([
+        "💡 Reduce el brillo de pantalla para ahorrar energía",
+        "🔋 Usa modo de ahorro de energía cuando sea posible",
+        "⏰ Establece temporizadores para limitar tiempo de uso",
+        "🌙 Activa modo nocturno para reducir consumo",
+        "🔌 Desconecta dispositivos cuando no los uses"
+    ])
+    
+    return recomendaciones
+
 def main():
     """Función principal del programa"""
     print("🌱 Iniciando EcoTracker...")
@@ -397,7 +438,7 @@ def main():
             case 5: 
                 establecer_metas_interfaz(metas)
             case 6: 
-                print(6)
+                mostrar_recomendaciones_interfaz(dispositivos, actividades, metas)
             case 7: 
                 print(7)
             case 8:
