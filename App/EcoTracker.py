@@ -207,7 +207,49 @@ def mostrar_reporte_diario_interfaz(actividades: List[Dict], metas: Dict, dispos
             nombre = dispositivos.get(dispositivo, {}).get('nombre', dispositivo)
             print(f"   {nombre}: {datos['consumo']:.3f} kWh ({datos['tiempo']} min)")
 
+def generar_reporte_diario(actividades: List[Dict], metas: Dict, fecha: str = None) -> Dict:
+    """Genera reporte de consumo diario"""
+    if fecha is None:
+        fecha = datetime.datetime.now().strftime("%d-%m-%Y")
     
+    actividades_dia = [
+        act for act in actividades
+        if act['fecha'].startswith(fecha)
+    ]
+    
+    if not actividades_dia:
+        return {"fecha": fecha, "actividades": 0, "consumo_total": 0, "co2_total": 0}
+    
+    consumo_total = sum(act['consumo_kwh'] for act in actividades_dia)
+    co2_total = sum(act['co2_kg'] for act in actividades_dia)
+    tiempo_total = sum(act['tiempo_minutos'] for act in actividades_dia)
+    
+    # Consumo por dispositivo
+    consumo_dispositivo = {}
+    for act in actividades_dia:
+        disp = act['dispositivo']
+        if disp not in consumo_dispositivo:
+            consumo_dispositivo[disp] = {
+                'tiempo': 0,
+                'consumo': 0,
+                'co2': 0
+            }
+        consumo_dispositivo[disp]['tiempo'] += act['tiempo_minutos']
+        consumo_dispositivo[disp]['consumo'] += act['consumo_kwh']
+        consumo_dispositivo[disp]['co2'] += act['co2_kg']
+    
+    meta_diaria = metas.get("meta_diaria_kwh", 1.0)
+    
+    return {
+        "fecha": fecha,
+        "actividades": len(actividades_dia),
+        "tiempo_total": tiempo_total,
+        "consumo_total": consumo_total,
+        "co2_total": co2_total,
+        "consumo_dispositivo": consumo_dispositivo,
+        "meta_diaria": meta_diaria,
+        "cumple_meta": consumo_total <= meta_diaria
+    }    
 
 def main():
     """Función principal del programa"""
