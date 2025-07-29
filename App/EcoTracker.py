@@ -1,4 +1,3 @@
-
 """
 EcoTracker - Monitor de Consumo Energético Digital
 Trabajo Final - Algoritmos y Estructuras de Datos
@@ -8,107 +7,18 @@ Autores: [Nombres del grupo]
 Fecha: Julio 2025
 """
 
-# Constantes globales
 import datetime
 import json
 from pathlib import Path
 from typing import Dict, Tuple, List
 
-
+# Variables globales para rutas de archivos
 RUTA_ACTIVIDADES = "../docs/actividades.txt"
 RUTA_METAS = "../docs/metas.txt"
 RUTA_DISPOSITIVOS = "../docs/dispositivos.txt"
+
 FACTOR_CO2_KWH = 0.4  # kg CO2 por kWh (promedio mundial)
 
-def mostrar_menu():
-    """Muestra el menú principal"""
-    print("\n" + "="*50)
-    print("🌱 EcoTracker - Monitor de Consumo Energético")
-    print("="*50)
-    print("1. Registrar actividad")
-    print("2. Ver dispositivos disponibles")
-    print("3. Reporte diario")
-    print("4. Reporte semanal")
-    print("5. Establecer metas")
-    print("6. Ver recomendaciones")
-    print("7. Estadísticas generales")
-    print("8. Salir")
-    print("-"*50)
-
-def inicializar_app():
-    print("hola")
-
-def obtener_ruta_dispositivos():
-    # Obtiene la ruta del directorio donde está este script
-    directorio_actual = Path(__file__).parent
-    # Construye la ruta completa al archivo dispositivos.txt
-    return directorio_actual / "dispositivos.txt"
-        
-def mostrar_dispositivos(dispositivos: Dict):
-    """Muestra la lista de dispositivos disponibles"""
-    print("\n📱 Dispositivos disponibles:")
-    print("-"*71)
-    if not dispositivos:
-        print("No hay dispositivos disponibles")
-        return
-    
-    print(f"{'Código':12} | {'Nombre':18} | {'Consumo Watts (W)':<15} | {'Categoria':<15}")
-    print("-" * 71)  # Línea separadora
-    for codigo, info in dispositivos.items():
-        print(f"{codigo:12} | {info['nombre']:18} | {info['consumo_watts']:<15}   | {info['categoria']}")
-    
-    print("-"*71)
-
-def calcular_consumo(dispositivos: Dict, dispositivo: str, tiempo_minutos: int) -> Tuple[float, float]:
-    """Calcula el consumo energético y emisiones CO2"""
-    if dispositivo not in dispositivos:
-        raise ValueError(f"Dispositivo '{dispositivo}' no encontrado")
-    
-    consumo_watts = dispositivos[dispositivo]["consumo_watts"]
-    
-    # Convertir a kWh
-    consumo_kwh = (consumo_watts * tiempo_minutos) / (1000 * 60)
-    
-    # Calcular CO2 equivalente
-    co2_kg = consumo_kwh * FACTOR_CO2_KWH
-    
-    return consumo_kwh, co2_kg
-
-def registrar_actividad(dispositivos: Dict, actividades: List[Dict], dispositivo: str, tiempo_minutos: int) -> bool:
-    """Registra una nueva actividad de uso"""
-    try:
-        consumo_kwh, co2_kg = calcular_consumo(dispositivos, dispositivo, tiempo_minutos)
-        
-        fecha_actual = datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
-        print(fecha_actual)
-        # Guardar en memoria
-        actividad = {
-            'fecha': fecha_actual,
-            'dispositivo': dispositivo,
-            'tiempo_minutos': tiempo_minutos,
-            'consumo_kwh': consumo_kwh,
-            'co2_kg': co2_kg
-        }
-        actividades.append(actividad)
-        
-        # Guardar en archivo
-        with open(RUTA_ACTIVIDADES, 'a', encoding='utf-8') as f:
-            linea = f"{fecha_actual}|{dispositivo}|{tiempo_minutos}|{consumo_kwh:.6f}|{co2_kg:.6f}\n"
-            f.write(linea)
-        
-        print(f"✅ Actividad registrada exitosamente!")
-        print(f"   Dispositivo: {dispositivos[dispositivo]['nombre']}")
-        print(f"   Tiempo: {tiempo_minutos} minutos")
-        print(f"   Consumo: {consumo_kwh:.3f} kWh")
-        print(f"   CO2 equivalente: {co2_kg:.3f} kg")
-        
-        return True
-        
-    except Exception as e:
-        print(f"❌ Error al registrar actividad: {e}")
-        return False
-
-#_-------------------------------------------------------------
 def cargar_dispositivos() -> Dict[str, Dict]:
     """Carga la base de datos de dispositivos desde archivo existente"""
     try:
@@ -178,7 +88,87 @@ def cargar_metas() -> Dict:
     except Exception as e:
         print(f"❌ Error al cargar metas: {e}")
         return {}
-                  
+           
+
+def mostrar_menu():
+    """Muestra el menú principal"""
+    print("\n" + "="*50)
+    print("🌱 EcoTracker - Monitor de Consumo Energético")
+    print("="*50)
+    print("1. Registrar actividad")
+    print("2. Ver dispositivos disponibles")
+    print("3. Reporte diario")
+    print("4. Reporte semanal")
+    print("5. Establecer metas")
+    print("6. Ver recomendaciones")
+    print("7. Estadísticas generales")
+    print("8. Salir")
+    print("-"*50)
+
+def mostrar_dispositivos(dispositivos: Dict):
+    """Muestra la lista de dispositivos disponibles"""
+    print("\n📱 Dispositivos disponibles:")
+    print("-"*71)
+    if not dispositivos:
+        print("No hay dispositivos disponibles")
+        return
+    
+    print(f"{'Código':12} | {'Nombre':18} | {'Consumo Watts (W)':<15} | {'Categoria':<15}")
+    print("-" * 71)  # Línea separadora
+    for codigo, info in dispositivos.items():
+        print(f"{codigo:12} | {info['nombre']:18} | {info['consumo_watts']:<15}   | {info['categoria']}")
+    
+    print("-"*71)
+
+def registrar_actividad(dispositivos: Dict, actividades: List[Dict], dispositivo: str, tiempo_minutos: int) -> bool:
+    """Registra una nueva actividad de uso"""
+    try:
+        consumo_kwh, co2_kg = calcular_consumo(dispositivos, dispositivo, tiempo_minutos)
+        
+        fecha_actual = datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+        print(fecha_actual)
+        # Guardar en memoria
+        actividad = {
+            'fecha': fecha_actual,
+            'dispositivo': dispositivo,
+            'tiempo_minutos': tiempo_minutos,
+            'consumo_kwh': consumo_kwh,
+            'co2_kg': co2_kg
+        }
+        actividades.append(actividad)
+        
+        # Guardar en archivo
+        with open(RUTA_ACTIVIDADES, 'a', encoding='utf-8') as f:
+            linea = f"{fecha_actual}|{dispositivo}|{tiempo_minutos}|{consumo_kwh:.6f}|{co2_kg:.6f}\n"
+            f.write(linea)
+        
+        print(f"✅ Actividad registrada exitosamente!")
+        print(f"   Dispositivo: {dispositivos[dispositivo]['nombre']}")
+        print(f"   Tiempo: {tiempo_minutos} minutos")
+        print(f"   Consumo: {consumo_kwh:.3f} kWh")
+        print(f"   CO2 equivalente: {co2_kg:.3f} kg")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error al registrar actividad: {e}")
+        return False
+
+def calcular_consumo(dispositivos: Dict, dispositivo: str, tiempo_minutos: int) -> Tuple[float, float]:
+    """Calcula el consumo energético y emisiones CO2"""
+    if dispositivo not in dispositivos:
+        raise ValueError(f"Dispositivo '{dispositivo}' no encontrado")
+    
+    consumo_watts = dispositivos[dispositivo]["consumo_watts"]
+    
+    # Convertir a kWh
+    consumo_kwh = (consumo_watts * tiempo_minutos) / (1000 * 60)
+    
+    # Calcular CO2 equivalente
+    co2_kg = consumo_kwh * FACTOR_CO2_KWH
+    
+    return consumo_kwh, co2_kg
+     
 def mostrar_reporte_diario_interfaz(actividades: List[Dict], metas: Dict, dispositivos: Dict):
     """Muestra el reporte diario de consumo - Interfaz"""
     print("\n📊 Reporte Diario de Consumo")
@@ -216,13 +206,21 @@ def generar_reporte_diario(actividades: List[Dict], metas: Dict, fecha: str = No
         act for act in actividades
         if act['fecha'].startswith(fecha)
     ]
-    
-    if not actividades_dia:
-        return {"fecha": fecha, "actividades": 0, "consumo_total": 0, "co2_total": 0}
-    
     consumo_total = sum(act['consumo_kwh'] for act in actividades_dia)
     co2_total = sum(act['co2_kg'] for act in actividades_dia)
-    tiempo_total = sum(act['tiempo_minutos'] for act in actividades_dia)
+    tiempo_total = sum(act['tiempo'] for act in actividades_dia)
+    meta_diaria = metas.get("meta_diaria_kwh", 1.0)
+    
+    if not actividades_dia:
+        return {"fecha": fecha,
+        "actividades": 0,
+        "tiempo_total": 0,
+        "consumo_total": 0,
+        "co2_total": 0,
+        "consumo_dispositivo": 0,
+        "meta_diaria": meta_diaria,
+        "cumple_meta": consumo_total <= meta_diaria
+        }
     
     # Consumo por dispositivo
     consumo_dispositivo = {}
@@ -238,7 +236,7 @@ def generar_reporte_diario(actividades: List[Dict], metas: Dict, fecha: str = No
         consumo_dispositivo[disp]['consumo'] += act['consumo_kwh']
         consumo_dispositivo[disp]['co2'] += act['co2_kg']
     
-    meta_diaria = metas.get("meta_diaria_kwh", 1.0)
+    
     
     return {
         "fecha": fecha,
@@ -438,8 +436,6 @@ def main():
     actividades = cargar_actividades()
     metas = cargar_metas()
     
-    inicializar_app()
-    # AGREGAR UNA WHILE
     while True:
         mostrar_menu()
         opcion = int(input("Seleccione una opción (1-8): "))
