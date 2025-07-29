@@ -9,7 +9,6 @@ Fecha: Julio 2025
 
 import datetime
 import json
-from pathlib import Path
 from typing import Dict, Tuple, List
 
 # Variables globales para rutas de archivos
@@ -208,7 +207,8 @@ def generar_reporte_diario(actividades: List[Dict], metas: Dict, fecha: str = No
     ]
     consumo_total = sum(act['consumo_kwh'] for act in actividades_dia)
     co2_total = sum(act['co2_kg'] for act in actividades_dia)
-    tiempo_total = sum(act['tiempo'] for act in actividades_dia)
+    tiempo_total = sum(act['tiempo_minutos'] for act in actividades_dia)
+    
     meta_diaria = metas.get("meta_diaria_kwh", 1.0)
     
     if not actividades_dia:
