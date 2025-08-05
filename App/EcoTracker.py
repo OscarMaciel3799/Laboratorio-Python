@@ -4,11 +4,12 @@ Trabajo Final - Algoritmos y Estructuras de Datos
 Principios de Green Software aplicados
 
 Autores: [Nombres del grupo]
-Fecha: Julio 2025
+Fecha: Agosto 2025
 """
 
 import datetime
 import json
+import re
 from typing import Dict, Tuple, List
 
 # Variables globales para rutas de archivos
@@ -88,7 +89,6 @@ def cargar_metas() -> Dict:
         print(f"❌ Error al cargar metas: {e}")
         return {}
            
-
 def mostrar_menu():
     """Muestra el menú principal"""
     print("\n" + "="*50)
@@ -153,6 +153,20 @@ def registrar_actividad(dispositivos: Dict, actividades: List[Dict], dispositivo
         print(f"❌ Error al registrar actividad: {e}")
         return False
 
+def validar_fecha(fecha):
+    # Verificar si la fecha es None
+    if len(fecha)==0:
+        return True
+    
+    # Expresión regular para el formato dd-mm-aaaa
+    patron = r'^\d{2}-\d{2}-\d{4}$'
+    
+    # Verificar si la fecha coincide con el patrón
+    if re.match(patron, fecha):
+        return True
+    else:
+        return False
+
 def calcular_consumo(dispositivos: Dict, dispositivo: str, tiempo_minutos: int) -> Tuple[float, float]:
     """Calcula el consumo energético y emisiones CO2"""
     if dispositivo not in dispositivos:
@@ -174,28 +188,31 @@ def mostrar_reporte_diario_interfaz(actividades: List[Dict], metas: Dict, dispos
     print("-"*40)
     
     fecha_input = input("Ingrese fecha (DD-MM-YYYY) o Enter para hoy: ").strip()
-    fecha = fecha_input if fecha_input else None
-    
-    reporte = generar_reporte_diario(actividades, metas, fecha)
-    
-    print(f"\n📅 Fecha: {reporte['fecha']}")
-    print(f"⏱️  Actividades registradas: {reporte['actividades']}")
-    print(f"🕐 Tiempo total: {reporte['tiempo_total']} minutos")
-    print(f"⚡ Consumo total: {reporte['consumo_total']:.3f} kWh")
-    print(f"🌍 CO2 equivalente: {reporte['co2_total']:.3f} kg")
-    print(f"🎯 Meta diaria: {reporte['meta_diaria']:.3f} kWh")
-    
-    if reporte['cumple_meta']:
-        print("✅ ¡Meta diaria cumplida!")
+    print("elinput de la fecha es",len(fecha_input))
+    if validar_fecha(fecha_input):
+        fecha = fecha_input if fecha_input else None
+        reporte = generar_reporte_diario(actividades, metas, fecha)
+        
+        print(f"\n📅 Fecha: {reporte['fecha']}")
+        print(f"⏱️  Actividades registradas: {reporte['actividades']}")
+        print(f"🕐 Tiempo total: {reporte['tiempo_total']} minutos")
+        print(f"⚡ Consumo total: {reporte['consumo_total']:.3f} kWh")
+        print(f"🌍 CO2 equivalente: {reporte['co2_total']:.3f} kg")
+        print(f"🎯 Meta diaria: {reporte['meta_diaria']:.3f} kWh")
+        
+        if reporte['cumple_meta']:
+            print("✅ ¡Meta diaria cumplida!")
+        else:
+            print("❌ Meta diaria no cumplida")
+        
+        if reporte['consumo_dispositivo']:
+            print("\n📱 Consumo por dispositivo:")
+            for dispositivo, datos in reporte['consumo_dispositivo'].items():
+                nombre = dispositivos.get(dispositivo, {}).get('nombre', dispositivo)
+                print(f"   {nombre}: {datos['consumo']:.3f} kWh ({datos['tiempo']} min)")
     else:
-        print("❌ Meta diaria no cumplida")
-    
-    if reporte['consumo_dispositivo']:
-        print("\n📱 Consumo por dispositivo:")
-        for dispositivo, datos in reporte['consumo_dispositivo'].items():
-            nombre = dispositivos.get(dispositivo, {}).get('nombre', dispositivo)
-            print(f"   {nombre}: {datos['consumo']:.3f} kWh ({datos['tiempo']} min)")
-
+        print("❌ Fecha inválida. ")
+        
 def generar_reporte_diario(actividades: List[Dict], metas: Dict, fecha: str = None) -> Dict:
     """Genera reporte de consumo diario"""
     if fecha is None:
