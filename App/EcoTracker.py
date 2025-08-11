@@ -3,7 +3,7 @@ EcoTracker - Monitor de Consumo Energético Digital
 Trabajo Final - Algoritmos y Estructuras de Datos
 Principios de Green Software aplicados
 
-Autores: [Nombres del grupo]
+Autores: Grupo D_50
 Fecha: Agosto 2025
 """
 
@@ -188,7 +188,6 @@ def mostrar_reporte_diario_interfaz(actividades: List[Dict], metas: Dict, dispos
     print("-"*40)
     
     fecha_input = input("Ingrese fecha (DD-MM-YYYY) o Enter para hoy: ").strip()
-    print("elinput de la fecha es",len(fecha_input))
     if validar_fecha(fecha_input):
         fecha = fecha_input if fecha_input else None
         reporte = generar_reporte_diario(actividades, metas, fecha)
