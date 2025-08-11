@@ -2,42 +2,61 @@
 
 **Algoritmos y Estructuras de Datos - 1er año**  
 **Ingeniería en Sistemas de Información**  
-**Universidad:** [Nombre de tu Universidad]
+**Universidad Tecnologica Nacional** 
+**Grupo : D_50**
 
-## 👥 Integrantes del Grupo
 
-- [Nombre Completo 1]
-- [Nombre Completo 2]
+# 🌱 EcoTracker - Monitor de Consumo Energético Digital
 
-## 📁 Contenido del Repositorio
+Monitor inteligente de consumo energético para dispositivos digitales
+Aplicación desarrollada aplicando principios de Green Software para concientizar sobre la huella de carbono tecnológica.
 
-Este repositorio contiene todos los entregables del trabajo final de Green Software, desarrollado en Python conforme a los principios de sostenibilidad digital.
+---
+# 🎯 Descripción
 
-### 📋 Entregables Incluidos
+EcoTracker es una aplicación de consola desarrollada en Python que permite monitorear y analizar el consumo energético de dispositivos electrónicos digitales. El proyecto implementa principios de Green Software para promover la conciencia ambiental en el uso de tecnología.
 
-1. **📄 Propuesta del Proyecto** (`propuesta/`)
+---
 
-   - Consigna ideada por el grupo
-   - Definición del problema a resolver
-   - Solución propuesta
-   - Justificación de relación con Green Software
+## 🎪 Contexto Académico
+- **Algoritmos y Estructuras de Datos - 1er año**  
+- **Ingeniería en Sistemas de Información**  
+- **Universidad Tecnologica Nacional** 
+- **Grupo : D_50**
+---
 
-2. **💻 Aplicación Python** (`app/`)
+# ✨ Características
+**🔋 Monitoreo Energético**
 
-   - Código fuente funcional (.py)
-   - Código modular con funciones
-   - Menú por consola
-   - Implementación de requisitos técnicos
+- Registro de actividades por dispositivo
+- Cálculo automático de consumo en kWh
+- Estimación de emisiones de CO2
 
-3. **🗂️ Archivos de Ejecución** (`data/` y root)
+**📊 Reportes Inteligentes**
 
-   - Archivos .txt necesarios para la aplicación
-   - Ejemplos de entradas y salidas
-   - Documentación de ejecución
+- Reportes diarios y semanales
+- Análisis de tendencias de consumo
+- Comparación con metas establecidas
 
-4. **🎥 Video de Presentación**
-   - Enlace al video de demostración (máx. 5 minutos)
-   - Presentación de integrantes y funcionamiento
+**🎯 Sistema de Metas**
+
+- Configuración de objetivos diarios, semanales y mensuales
+- Alertas de exceso de consumo
+- Seguimiento de progreso
+
+**💡 Recomendaciones Personalizadas**
+
+- Sugerencias basadas en patrones de uso
+- Identificación de dispositivos con mayor consumo
+- Tips de ahorro energético
+
+**📈 Estadísticas Avanzadas** 
+
+- Métricas generales de uso histórico
+- Análisis de dispositivos más utilizados
+- Cálculos de impacto ambiental acumulado
+
+---
 
 ## 🗂️ Estructura del Repositorio
 
@@ -46,123 +65,66 @@ green-software-project/
 │
 ├── README.md                    # Este archivo
 ├── propuesta/
-│   └── consigna.md             # Propuesta escrita del proyecto
+│   └── EcoTracker - Manual de Usuario 🌱.docx          
+|   ├── EcoTracker - Monitor de Consumo Energético 🌱.pdf       
+|   └── Link al Video de Youtube.txt              
 │
 ├── app/
-│   ├── main.py                 # Archivo principal ejecutable
-│   ├── modules/                # Código modular
-│   │   ├── __init__.py
-│   │   ├── core_functions.py   # Funciones principales
-│   │   ├── file_handler.py     # Manejo de archivos
-│   │   └── utils.py           # Funciones auxiliares
-│   └── requirements.txt        # Dependencias (si las hay)
+│   ├── EcoTracker.py           # Archivo principal ejecutable
 │
-├── data/
-│   ├── input/                  # Archivos de entrada
-│   │   └── sample_data.txt
-│   └── output/                 # Archivos de salida generados
-│       └── results.txt
-│
-├── docs/
-│   ├── manual_usuario.md       # Manual de uso
-│   ├── ejemplos_ejecucion.md   # Ejemplos de entrada/salida
-│   └── requisitos_tecnicos.md  # Documentación técnica
-│
-└── video/
-    └── presentacion_link.md    # Enlace al video de presentación
+└── docs/
+    ├── actividades.txt       # Base de datos de las actividades
+    ├── dispositivos.txt      # Base de datos de los dispositivos
+    └── metas.txt             # Base de datos de las metas
+
 ```
 
-## 🚀 Cómo Ejecutar la Aplicación
+## 🛠️ Instalación
 
-### Prerrequisitos
+### Requisitos del Sistema
+- Python 3.8 o superior
+- Sistema operativo: Windows, macOS, Linux
 
-- Python 3.8 o superior instalado
-- Sistema operativo: Windows, macOS o Linux
+### Instalación Rápida
 
-### Pasos para Ejecutar
+1. **Clonar el repositorio**
+```bash
+git clone https://github.com/OscarMaciel3799/Laboratorio-Python.git
+cd Laboratorio-Python
+```
 
-1. **Clonar el repositorio:**
+2. **Ingresar a la carpeta App**
+```bash
+cd app
+```
 
-   ```bash
-   git clone https://github.com/[usuario]/[nombre-repo].git
-   cd green-software-project
-   ```
+3. **Ejecutar la aplicación**
+```bash
+python ecotracker.py
+```
 
-2. **Navegar a la carpeta de la aplicación:**
+## 🌍 Principios de Green Software
 
-   ```bash
-   cd app
-   ```
+EcoTracker implementa los siguientes principios de desarrollo sostenible:
 
-3. **Ejecutar la aplicación:**
+### 🔋 **Eficiencia Energética**
+- **Algoritmos optimizados** para minimizar cálculos redundantes
+- **Uso mínimo de memoria** con estructuras de datos eficientes
+- **Sin dependencias pesadas** que aumenten el consumo
 
-   ```bash
-   python main.py
-   ```
+### 💾 **Almacenamiento Sostenible**
+- **Archivos de texto plano** en lugar de bases de datos pesadas
+- **Compresión natural** usando formatos eficientes (JSON, pipe-separated)
+- **Escritura diferida** para minimizar I/O operations
 
-4. **Seguir las instrucciones del menú interactivo**
+### 🚀 **Rendimiento Optimizado**
+- **Carga bajo demanda** de datos
+- **Caching inteligente** de dispositivos en memoria
+- **Validaciones tempranas** para evitar procesamiento innecesario
 
-### Archivos Necesarios
-
-- Todos los archivos .txt requeridos están incluidos en `/data/`
-- La aplicación creará archivos de salida automáticamente
-- Ver `/docs/ejemplos_ejecucion.md` para casos de uso detallados
-
-## ⚙️ Requisitos Técnicos Implementados
-
-La aplicación cumple con todos los requisitos técnicos solicitados:
-
-- ✅ **Estructuras condicionales** (if, else, elif)
-- ✅ **Estructuras repetitivas** (for, while)
-- ✅ **Manejo de archivos .txt** (lectura y escritura)
-- ✅ **Interfaz por consola** con menú amigable
-- ✅ **Código modular** dividido en funciones
-- ✅ **Buena legibilidad** (nombres variables, comentarios)
-
-## 🌿 Green Software
-
-Este proyecto implementa principios de Green Software Foundation enfocándose en:
-
-- Eficiencia energética del código
-- Optimización de recursos computacionales
-- Algoritmos de bajo consumo
-- Conciencia sobre sostenibilidad digital
-
-_Ver detalles completos en `/propuesta/consigna.md`_
-
-## 📹 Video de Presentación
-
-**Duración:** Máximo 5 minutos  
-**Enlace:** [Ver en `/video/presentacion_link.md`]
-
-**Contenido del video:**
-
-- Presentación de todos los integrantes
-- Demostración del funcionamiento de la app
-- Explicación del problema que resuelve
-- Decisiones de Green Software implementadas
-
-## 📚 Documentación Adicional
-
-- **Manual de Usuario:** `/docs/manual_usuario.md`
-- **Ejemplos de Ejecución:** `/docs/ejemplos_ejecucion.md`
-- **Propuesta Completa:** `/propuesta/consigna.md`
-- **Documentación Técnica:** `/docs/requisitos_tecnicos.md`
-
-## 📄 Información Académica
-
-**Materia:** Algoritmos y Estructuras de Datos  
-**Modalidad:** Grupal (3-4 integrantes)  
-**Objetivo:** Desarrollar una aplicación Python que promueva prácticas sostenibles siguiendo principios de Green Software
-
-## 📞 Contacto
-
-Para consultas sobre este proyecto académico:
-
-- **Grupo:** [Nombres de integrantes]
-- **Universidad:** [Nombre de Universidad]
-- **Materia:** Algoritmos y Estructuras de Datos
+### 📊 **Conciencia de Carbono**
+- **Métricas de CO2** visibles en todas las operaciones
+- **Factor de conversión actualizable** (0.4 kg CO2/kWh)
+- **Reportes de impacto ambiental** para toma de decisiones
 
 ---
-
-_Proyecto desarrollado como trabajo final para la promoción de Green Software y prácticas de desarrollo sostenible._
