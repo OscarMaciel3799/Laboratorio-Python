@@ -115,7 +115,6 @@ EcoTracker implementa los siguientes principios de desarrollo sostenible:
 ### 💾 **Almacenamiento Sostenible**
 - **Archivos de texto plano** en lugar de bases de datos pesadas
 - **Compresión natural** usando formatos eficientes (JSON, pipe-separated)
-- **Escritura diferida** para minimizar I/O operations
 
 ### 🚀 **Rendimiento Optimizado**
 - **Carga bajo demanda** de datos
